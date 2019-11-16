@@ -1,9 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set( 'display_errors','1');
-
-
 include_once 'vendor/autoload.php';
 
 $requestUri = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
@@ -16,7 +12,9 @@ foreach ($requestUri as $i => $item) {
 }
 
 if(!isset($apiClass)){
-    echo json_encode(['result' => 'error', 'message' => 'Api command not found']);
+    header("HTTP/1.0 404 Not Found");
+    header("HTTP/1.1 404 Not Found");
+    header("Status: 404 Not Found");
 }else{
     $api = new $apiClass['name']($apiClass['i']);
     $api->run();
