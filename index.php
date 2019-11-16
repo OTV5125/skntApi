@@ -3,12 +3,11 @@
 include_once 'vendor/autoload.php';
 
 $requestUri = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
-foreach ($requestUri as $i => $item) {
+foreach ($requestUri as $i => $item) { //Цикл поиска точки входа
     if($item === 'users'){
         $apiClass = ['name' => '\Api\Api\\Api'.ucfirst($item), 'i' => $i];
         break;
     }
-
 }
 
 if(!isset($apiClass)){
