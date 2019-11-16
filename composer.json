@@ -1,0 +1,16 @@
+{
+  "authors": [
+    {
+      "name": "Nilov Mikhail",
+      "email": "OTV5125@gmail.com",
+      "homepage": "https://nilov.online",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Api\\": "api/",
+      "Core\\": "core/"
+    }
+  }
+}
