@@ -11,6 +11,9 @@ namespace Api\Api;
 
 class ApiUsers extends Api
 {
+    /**
+     * Метод для работы GET
+     */
     public function viewAction()
     {
         if ($this->requestUri[$this->startIndex + 2] === 'services' && $this->requestUri[$this->startIndex + 4] === 'tarifs') {
@@ -26,21 +29,54 @@ class ApiUsers extends Api
         }
     }
 
+    /**
+     * Метод для работы PUT
+     */
     public function updateAction(){
-
+        if ($this->requestUri[$this->startIndex + 2] === 'services' && $this->requestUri[$this->startIndex + 4] === 'tarif') {
+            $this->getTariffId($this->requestUri[$this->startIndex + 1], $this->requestUri[$this->startIndex + 3]);
+        } else {
+            $this->outputJsonResult([
+                'result' => 'error',
+                'message' => 'unknown PUT /users request structure',
+                'example' => [
+                    '/users/{user_id}/services/{service_id}/tarif'
+                ]
+            ]);
+        }
     }
 
+    /**
+     * @param $val
+     * @param $errMsg
+     * Метод проверки только числа, принимает значение для проверки и строку ошибки
+     */
+    protected function pregMatchNumber($val, $errMsg){
+        $pm = "/^([0-9])+$/";
+        if (!preg_match($pm, $val)) {
+            $this->outputJsonResult(['result' => 'error', 'message' => $errMsg]);
+        }
+    }
+
+    /**
+     * @param $userId
+     * @param $serviceId
+     */
+    public function getTariffId($userId, $serviceId){
+        $this->pregMatchNumber($userId, 'user_id must be number');
+        $this->pregMatchNumber($serviceId, 'service_id must be number');
+        $result = $this->mysql->getTariffId($userId, $serviceId);
+        $this->outputJsonResult($result);
+    }
+
+    /**
+     * @param $userId
+     * @param $serviceId
+     */
     public function getTariffs($userId, $serviceId)
     {
-        $pm = "/^([0-9])+$/";
-        if (!preg_match($pm, $userId)) {
-            $this->outputJsonResult(['result' => 'error', 'message' => 'user_id must be number']);
-        }
-
-        if (!preg_match($pm, $serviceId)) {
-            $this->outputJsonResult(['result' => 'error', 'message' => 'service_id must be number']);
-        }
-
+        $this->pregMatchNumber($userId, 'user_id must be number');
+        $this->pregMatchNumber($serviceId, 'service_id must be number');
         $result = $this->mysql->getTariffs($userId, $serviceId);
         if ($result['result'] == 'error') {
             $this->outputJsonResult($result);
