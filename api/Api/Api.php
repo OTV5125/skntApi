@@ -18,6 +18,10 @@ abstract class Api
     public $requestParams = [];
     protected $action = ''; //Название метод для выполнения
 
+    /**
+     * Api constructor.
+     * @param $index индекс найденного класса в url'e
+     */
     public function __construct($index)
     {
         header("Access-Control-Allow-Orgin: *");
@@ -41,6 +45,10 @@ abstract class Api
         $this->startIndex = $index;
     }
 
+    /**
+     * Запуск приложения
+     * @return mixed
+     */
     public function run()
     {
         if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
@@ -64,6 +72,10 @@ abstract class Api
         }
     }
 
+    /**
+     * Вывод json из array
+     * @param $arr
+     */
     protected function outputJsonResult($arr)
     {
         if (!is_array($arr)) {
@@ -75,6 +87,10 @@ abstract class Api
         exit;
     }
 
+    /**
+     * Получение действия из заспроса
+     * @return null|string
+     */
     protected function getAction()
     {
         $method = $this->method;
@@ -99,5 +115,4 @@ abstract class Api
                 return null;
         }
     }
-
 }
