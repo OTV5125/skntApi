@@ -16,33 +16,52 @@ class ApiUsers extends Api
      */
     public function viewAction()
     {
-        if ($this->requestUri[$this->startIndex + 2] === 'services' && $this->requestUri[$this->startIndex + 4] === 'tarifs') {
-            $this->getTariffs($this->requestUri[$this->startIndex + 1], $this->requestUri[$this->startIndex + 3]);
-        } else {
-            $this->outputJsonResult([
-                'result' => 'error',
-                'message' => 'unknown GET /users request structure',
-                'example' => [
-                    '/users/{user_id}/services/{service_id}/tarifs'
-                ]
-            ]);
+        $getTariffs = [
+            $this->urlParam[0],
+            'services',
+            $this->urlParam[2],
+            'tarifs'
+        ];
+
+        switch ($this->urlParam) {
+            case $getTariffs:
+                $this->getTariffs($getTariffs[0], $getTariffs[2]);
+                break;
+            default:
+                $this->outputJsonResult([
+                    'result' => 'error',
+                    'message' => 'unknown GET /users request structure',
+                    'example' => [
+                        '/users/{user_id}/services/{service_id}/tarifs'
+                    ]
+                ]);
         }
     }
 
     /**
      * Метод для работы PUT
      */
-    public function updateAction(){
-        if ($this->requestUri[$this->startIndex + 2] === 'services' && $this->requestUri[$this->startIndex + 4] === 'tarif') {
-            $this->getTariffId($this->requestUri[$this->startIndex + 1], $this->requestUri[$this->startIndex + 3]);
-        } else {
-            $this->outputJsonResult([
-                'result' => 'error',
-                'message' => 'unknown PUT /users request structure',
-                'example' => [
-                    '/users/{user_id}/services/{service_id}/tarif'
-                ]
-            ]);
+    public function updateAction()
+    {
+        $getTariffId = [
+            $this->urlParam[0],
+            'services',
+            $this->urlParam[2],
+            'tarif'
+        ];
+
+        switch ($this->urlParam) {
+            case $getTariffId:
+                $this->getTariffId($getTariffId[0], $getTariffId[2]);
+                break;
+            default:
+                $this->outputJsonResult([
+                    'result' => 'error',
+                    'message' => 'unknown PUT /users request structure',
+                    'example' => [
+                        '/users/{user_id}/services/{service_id}/tarif'
+                    ]
+                ]);
         }
     }
 
@@ -51,7 +70,8 @@ class ApiUsers extends Api
      * @param $errMsg
      * Метод проверки только числа, принимает значение для проверки и строку ошибки
      */
-    protected function pregMatchNumber($val, $errMsg){
+    protected function pregMatchNumber($val, $errMsg)
+    {
         $pm = "/^([0-9])+$/";
         if (!preg_match($pm, $val)) {
             $this->outputJsonResult(['result' => 'error', 'message' => $errMsg]);
@@ -62,7 +82,8 @@ class ApiUsers extends Api
      * @param $userId
      * @param $serviceId
      */
-    public function getTariffId($userId, $serviceId){
+    public function getTariffId($userId, $serviceId)
+    {
         $this->pregMatchNumber($userId, 'user_id must be number');
         $this->pregMatchNumber($serviceId, 'service_id must be number');
         $result = $this->mysql->getTariffId($userId, $serviceId);

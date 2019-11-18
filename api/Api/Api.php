@@ -11,10 +11,10 @@ namespace Api\Api;
 
 abstract class Api
 {
-    public $startIndex; //Индекс запускаемого класса в url
     protected $mysql;
     protected $method = ''; //GET|POST|PUT|DELETE
     public $requestUri = [];
+    public $urlParam = [];
     public $requestParams = [];
     protected $action = ''; //Название метод для выполнения
 
@@ -42,7 +42,11 @@ abstract class Api
         $this->method = $_SERVER['REQUEST_METHOD'];
 
         //Запоминаем индекс точки входа
-        $this->startIndex = $index;
+        foreach ($this->requestUri as $i => $item) {
+            if($i > $index){
+                $this->urlParam[] = $item;
+            }
+        }
     }
 
     /**
